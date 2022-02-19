@@ -78,6 +78,7 @@ public class GuildImpl implements Guild
     private final JDAImpl api;
 
     private final SortedSnowflakeCacheViewImpl<Category> categoryCache = new SortedSnowflakeCacheViewImpl<>(Category.class, Channel::getName, Comparator.naturalOrder());
+    private final SortedSnowflakeCacheViewImpl<GuildScheduledEvent> scheduledEventCache = new SortedSnowflakeCacheViewImpl<>(GuildScheduledEvent.class, GuildScheduledEvent::getName, Comparator.naturalOrder());
     private final SortedSnowflakeCacheViewImpl<VoiceChannel> voiceChannelCache = new SortedSnowflakeCacheViewImpl<>(VoiceChannel.class, Channel::getName, Comparator.naturalOrder());
     private final SortedSnowflakeCacheViewImpl<StoreChannel> storeChannelCache = new SortedSnowflakeCacheViewImpl<>(StoreChannel.class, Channel::getName, Comparator.naturalOrder());
     private final SortedSnowflakeCacheViewImpl<TextChannel> textChannelCache = new SortedSnowflakeCacheViewImpl<>(TextChannel.class, Channel::getName, Comparator.naturalOrder());
@@ -474,6 +475,38 @@ public class GuildImpl implements Guild
         return rulesChannel;
     }
 
+    @Nullable
+    @Override
+    @CheckReturnValue
+    public RestAction<GuildScheduledEvent> retrieveScheduledEventById(long id)
+    {
+        // TODO: Implement
+        return null;
+    }
+    @Nullable
+    @Override
+    public GuildScheduledEvent getScheduledEventById(long id)
+    {
+        // TODO: Implement
+        return null;
+    }
+    @Override
+    @Nonnull
+    public List<GuildScheduledEvent> getScheduledEvents()
+    {
+        // TODO: Implement
+        return null;
+    }
+
+    @Override
+    @Nonnull
+    @CheckReturnValue
+    public GuildScheduledEventAction createScheduledEvent()
+    {
+        // TODO: Implement
+        return null;
+    }
+
     @Override
     public TextChannel getCommunityUpdatesChannel()
     {
@@ -565,6 +598,13 @@ public class GuildImpl implements Guild
     public SortedSnowflakeCacheView<Category> getCategoryCache()
     {
         return categoryCache;
+    }
+
+    @Nonnull
+    @Override
+    public SortedSnowflakeCacheView<GuildScheduledEvent> getScheduledEventCache()
+    {
+        return scheduledEventCache;
     }
 
     @Nonnull
@@ -1970,6 +2010,12 @@ public class GuildImpl implements Guild
     }
 
     // -- Map getters --
+
+    public SortedSnowflakeCacheViewImpl<GuildScheduledEvent> getScheduledEventsView()
+    {
+        return scheduledEventCache;
+    }
+
 
     public SortedSnowflakeCacheViewImpl<Category> getCategoriesView()
     {

@@ -191,6 +191,7 @@ public class EntityBuilder
         final DataArray voiceStateArray = guildJson.getArray("voice_states");
         final Optional<DataArray> featuresArray = guildJson.optArray("features");
         final Optional<DataArray> presencesArray = guildJson.optArray("presences");
+        final DataArray scheduledEventsArray = guildJson.getArray("guild_scheduled_events");
         final long ownerId = guildJson.getUnsignedLong("owner_id", 0L);
         final long afkChannelId = guildJson.getUnsignedLong("afk_channel_id", 0L);
         final long systemChannelId = guildJson.getUnsignedLong("system_channel_id", 0L);
@@ -297,6 +298,13 @@ public class EntityBuilder
             DataObject threadJson = threadArray.getObject(i);
             createThreadChannel(guildObj, threadJson, guildObj.getIdLong());
         }
+
+        for (int i = 0; i < scheduledEventsArray.length(); i++)
+        {
+            DataObject scheduledEventJson = scheduledEventsArray.getObject(i);
+            createGuildScheduledEvent(guildObj, scheduledEventJson, guildObj.getIdLong());
+        }
+
 
         createGuildEmotePass(guildObj, emotesArray);
         guildJson.optArray("stage_instances")
@@ -901,6 +909,60 @@ public class EntityBuilder
                 .setManaged(json.getBoolean("managed"))
                 .setAvailable(json.getBoolean("available", true));
     }
+
+    public GuildScheduledEvent createGuildScheduledEvent(long guildId, DataObject json)
+    {
+        return createGuildScheduledEvent(null, json, guildId);
+    }
+    public GuildScheduledEvent createGuildScheduledEvent(GuildImpl guild, DataObject json, long guildId)
+    {
+        System.out.println(json.toPrettyString());
+        final long id = json.getLong("id");
+        if (guild == null)
+            guild = (GuildImpl) getJDA().getGuildsView().get(guildId);
+        GuildScheduledEventImpl guildScheduledEvent = (GuildScheduledEventImpl) guild.getScheduledEventsView().get(id);
+        if (guildScheduledEvent == null)
+        {
+            SnowflakeCacheViewImpl<GuildScheduledEvent> guildScheduledEventView = guild.getScheduledEventsView();
+            try (UnlockHook hook = guildScheduledEventView.writeLock())
+            {
+                guildScheduledEvent = new GuildScheduledEventImpl(id, guild);
+                guildScheduledEventView.getMap().put(id, guildScheduledEvent);
+            }
+        }
+        guildScheduledEvent.setName(json.getString("name"))
+                .setDescription(json.getString("description", null))
+                .setStatus(GuildScheduledEvent.Status.fromKey(json.getInt("status", -1)))
+                .setInterestedUserCount(json.getInt("user_count", -1))
+                .setStartTime(json.getOffsetDateTime("scheduled_start_time"))
+                .setEndTime(json.getOffsetDateTime("scheduled_end_time", null));
+        final long creatorId = json.getLong("creator_id", -1);
+        guildScheduledEvent.setCreatorId(creatorId);
+        if (creatorId != -1)
+        {
+            if (json.hasKey("creator"))
+                guildScheduledEvent.setCreator(createUser(json.getObject("creator")));
+            else
+                guildScheduledEvent.setCreator(getJDA().getUserById(creatorId));
+        }
+        final GuildScheduledEvent.Type type = GuildScheduledEvent.Type.fromKey(json.getInt("entity_type"));
+        switch (type)
+        {
+        case STAGE_INSTANCE:
+            StageChannel stageChannel = guild.getStageChannelById(json.getLong("channel_id"));
+            guildScheduledEvent.setStageChannel(stageChannel);
+            break;
+        case VOICE:
+            VoiceChannel voiceChannel = guild.getVoiceChannelById(json.getLong("channel_id"));
+            guildScheduledEvent.setVoiceChannel(voiceChannel);
+            break;
+        case EXTERNAL:
+            String externalLocation = json.getObject("entity_metadata").getString("location");
+            guildScheduledEvent.setExternalLocation(externalLocation);
+        }
+        return guildScheduledEvent;
+    }
+
 
     public Category createCategory(DataObject json, long guildId)
     {

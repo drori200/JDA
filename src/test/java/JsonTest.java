@@ -18,9 +18,11 @@ import net.dv8tion.jda.api.utils.data.DataObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.OffsetDateTime;
 public class JsonTest
 {
-    private static final String json = "{\"int\":10,\"long\":100,\"boolean\":true,\"string\":\"test\"}";
+    private static final String exampleTimestamp = "2022-01-22T01:30:00+00:00";
+    private static final String json = "{\"int\":10,\"long\":100,\"boolean\":true,\"string\":\"test\",\"timestamp\":\"" + exampleTimestamp + "\"}";
 
     @Test
     public void testParse()

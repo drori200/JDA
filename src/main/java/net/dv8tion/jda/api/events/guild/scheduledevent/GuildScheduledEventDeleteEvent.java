@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package net.dv8tion.jda.api.events.thread;
+package net.dv8tion.jda.api.events.guild.scheduledevent;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.ThreadChannel;
+import net.dv8tion.jda.api.entities.GuildScheduledEvent;
 
 import javax.annotation.Nonnull;
 
 /**
- * This event is dispatched when a {@link ThreadChannel} that JDA didn't previously have access to (due to permissions) is now visible.
+ * Indicates that a {@link GuildScheduledEvent} object has been deleted.
  *
- * For example, if the bot is given the Administrator permission, any thread channels that the bot could not previously see would be "revealed".
- *
- * @see ThreadHiddenEvent
+ * Can be used to detect when a {@link GuildScheduledEvent} was deleted and retrieve the deleted scheduled event.
  */
-public class ThreadRevealedEvent extends GenericThreadEvent
+public class GuildScheduledEventDeleteEvent extends GenericGuildScheduledEventGatewayEvent
 {
-    public ThreadRevealedEvent(@Nonnull JDA api, long responseNumber, ThreadChannel thread)
+    public GuildScheduledEventDeleteEvent(@Nonnull JDA api, long responseNumber, @Nonnull GuildScheduledEvent guildScheduledEvent)
     {
-        super(api, responseNumber, thread);
+        super(api, responseNumber, guildScheduledEvent);
     }
 }
