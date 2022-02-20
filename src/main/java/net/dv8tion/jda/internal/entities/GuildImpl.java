@@ -494,8 +494,12 @@ public class GuildImpl implements Guild
     @Nonnull
     public List<GuildScheduledEvent> getScheduledEvents()
     {
-        // TODO: Implement
-        return null;
+        System.out.println("getSchuledEvents");
+        return Collections.unmodifiableList(
+                getScheduledEventsView().stream()
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList()));
+
     }
 
     @Override
@@ -504,6 +508,7 @@ public class GuildImpl implements Guild
     public GuildScheduledEventAction createScheduledEvent()
     {
         // TODO: Implement
+        System.out.println("create");
         return null;
     }
 
