@@ -36,6 +36,8 @@ import net.dv8tion.jda.api.events.guild.override.GenericPermissionOverrideEvent;
 import net.dv8tion.jda.api.events.guild.override.PermissionOverrideCreateEvent;
 import net.dv8tion.jda.api.events.guild.override.PermissionOverrideDeleteEvent;
 import net.dv8tion.jda.api.events.guild.override.PermissionOverrideUpdateEvent;
+import net.dv8tion.jda.api.events.guild.scheduledevent.*;
+import net.dv8tion.jda.api.events.guild.scheduledevent.update.*;
 import net.dv8tion.jda.api.events.guild.update.*;
 import net.dv8tion.jda.api.events.guild.voice.*;
 import net.dv8tion.jda.api.events.http.HttpRequestEvent;
@@ -197,6 +199,22 @@ public abstract class ListenerAdapter implements EventListener
     //Thread Member Events
     public void onThreadMemberJoin(@Nonnull ThreadMemberJoinEvent event) {}
     public void onThreadMemberLeave(@Nonnull ThreadMemberLeaveEvent event) {}
+
+    //Guild Scheduled Events Events
+    public void onGenericGuildScheduledEventGateway(@Nonnull GenericGuildScheduledEventGatewayEvent event) {}
+    public void onGuildScheduledEventCreate(@Nonnull GuildScheduledEventCreateEvent event) {}
+    public void onGuildScheduledEventDelete(@Nonnull GuildScheduledEventDeleteEvent event) {}
+    public void onGuildScheduledEventUserAdd(@Nonnull GuildScheduledEventUserAddEvent event) {}
+    public void onGuildScheduledEventUserRemove(@Nonnull GuildScheduledEventUserRemoveEvent event) {}
+
+    //Guild Scheduled Events Update Events
+    public void onGenericGuildScheduledEventUpdate(@Nonnull GenericGuildScheduledEventUpdateEvent event) {}
+    public void onGuildScheduledEventUpdateDescription(@Nonnull GuildScheduledEventUpdateDescriptionEvent event) {}
+    public void onGuildScheduledEventUpdateEndTime(@Nonnull GuildScheduledEventUpdateEndTimeEvent event) {}
+    public void onGuildScheduledEventUpdateLocation(@Nonnull GuildScheduledEventUpdateLocationEvent event) {}
+    public void onGuildScheduledEventUpdateName(@Nonnull GuildScheduledEventUpdateNameEvent event) {}
+    public void onGuildScheduledEventUpdateStartTime(@Nonnull GuildScheduledEventUpdateStartTimeEvent event) {}
+    public void onGuildScheduledEventUpdateStatus(@Nonnull GuildScheduledEventUpdateStatusEvent event) {}
 
     //Guild Events
     public void onGuildReady(@Nonnull GuildReadyEvent event) {}

@@ -502,14 +502,30 @@ public class GuildImpl implements Guild
 
     }
 
-    @Override
-    @Nonnull
+
     @CheckReturnValue
-    public GuildScheduledEventAction createScheduledEvent()
+    @Nonnull
+    @Override
+    public AuditableRestAction<GuildScheduledEvent> createScheduledEvent()
     {
-        // TODO: Implement
-        System.out.println("create");
-        return null;
+        checkPermission(Permission.MANAGE_EVENTS);
+
+        DataObject body = DataObject.empty();
+        body.put("name", "test1");
+        body.put("description", "test2");
+        body.put("scheduled_start_time", OffsetDateTime.now().plusHours(10));
+        body.put("scheduled_end_time", OffsetDateTime.now().plusHours(12));
+        body.put("creator_id", 249028994584805379L);
+        body.put("entity_type", 2);
+        body.put("channel_id", 944386402362216482L);
+
+        JDAImpl jda = getJDA();
+        Route.CompiledRoute route = Route.Guilds.CREATE_SCHEDULED_EVENT.compile(getId());
+        return new AuditableRestActionImpl<>(jda, route, body, (response, request) ->
+        {
+            DataObject obj = response.getObject();
+            return jda.getEntityBuilder().createGuildScheduledEvent(this, obj, getIdLong());
+        });
     }
 
     @Override
